@@ -13,6 +13,8 @@ namespace BlogsConsole
             logger.Info("Program started");
             try
             {
+                var db = new BloggingContext();
+
                 string choice = "";
                 do
                 {
@@ -25,34 +27,36 @@ namespace BlogsConsole
                     choice = Console.ReadLine();
                     if (choice == "1")
                     {
-                        displayAllBlogs();
+                        displayAllBlogs(db);
                     }
                     else if (choice == "2")
                     {
-                        addNewBlog();                        
+                        addNewBlog(db);                        
                     }
                     if (choice == "3")
                     {
-                        
+                        int blogId=selectBlog(db);
+                        Console.WriteLine($"Adding to blog ID {blogId}.\n");
+                        addNewPost(db, blogId);
                     }
 
                 } while (choice == "1" || choice == "2" || choice == "3");
 
+            }
+            catch(ExternalException ex)
+            {
+                logger.Error("Data exception "+ex.Message);
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
             }
 
-            Console.WriteLine("Press enter to quit");
-            string x = Console.ReadLine();
-
             logger.Info("Program ended");
         }
 
-        public static void displayAllBlogs()
+        public static void displayAllBlogs(BloggingContext db)
         {
-            var db = new BloggingContext();
 
             // Display all Blogs from the database
             var query = db.Blogs.OrderBy(b => b.Name);
