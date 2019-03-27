@@ -87,11 +87,170 @@ namespace BlogsConsole
                 }
             }
 
-            var blog = new Blog { Name = name };
-            var db = new BloggingContext();
+            try
+            {
+                var blog = new Blog { Name = name };
 
-            db.AddBlog(blog);
-            logger.Info("Blog added - {name}", name);
+                db.AddBlog(blog);
+                logger.Info("Blog added - {name}", name);
+            }
+            catch (ExternalException ex)
+            {
+                logger.Error("Data exception on new blog add: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
+
+        }
+
+        public static int selectBlog(BloggingContext db)
+        {
+            int returnBlogID=0;
+            string blogTitle = "";
+            Boolean done = false;
+            string choice = "";
+            do
+            {
+                done = false;
+                Console.WriteLine("");
+                Console.WriteLine("1) Pick blog by title.");
+                Console.WriteLine("2) Pick blog by ID.");
+                // input response
+                choice = Console.ReadLine();
+                if (choice == "1")
+                {
+                    while (!done)
+                    {
+                        Console.Write("Enter title: ");
+                        blogTitle = Console.ReadLine().ToUpper();
+
+                        try
+                        {
+
+                            var num = db.Blogs.Where(b => b.Name.ToUpper().Contains(blogTitle)).Count();
+                            if (num > 1)
+                                Console.WriteLine("There are more than one blogs with this title. Please enter more characters.");
+                            else if (num == 0)
+                                Console.WriteLine("There are no blogs with this title. Please try again.");
+                            else if (num == 1)
+                            {
+                                Console.WriteLine("There is one blog with this title. Retrieving...");
+                                IEnumerable<Blog> blogList = db.Blogs.Where(b => b.Name.ToUpper().Contains(blogTitle));
+                                foreach (Blog b in blogList)
+                                {
+                                    returnBlogID = b.BlogId;
+                                }
+                                done = true;
+                            }
+                            else
+                                Console.WriteLine("There are an unknown number of blogs with this title. Please try again.");
+                        }
+                        catch (ExternalException ex)
+                        {
+                            logger.Error("Data exception selecting blog by title: " + ex.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex.Message);
+                        }
+
+                    }
+                }
+                if (choice == "2")
+                {
+                    while (!done)
+                    {
+                        Console.Write("Enter blog ID: ");
+                        if (int.TryParse(Console.ReadLine(), out int blogId))
+                        {
+                            returnBlogID = blogId;
+                            try
+                            {
+                                var num = db.Blogs.Where(b => b.BlogId.Equals(returnBlogID)).Count();
+                                if (num != 1)
+                                    Console.WriteLine("There are no blogs with this blog ID. Please try again.");
+                                else
+                                {
+                                    Console.WriteLine("There is one blog with this ID. Retrieving...");
+                                    returnBlogID = blogId;
+                                    done = true;
+                                }
+                            }
+                            catch (ExternalException ex)
+                            {
+                                logger.Error("Data exception selecting blog by ID: " + ex.Message);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.Error(ex.Message);
+                            }
+
+                        }
+                        else
+                        {
+                            logger.Error("Blog ID is not an integer value. Please try again.");
+                        }
+                    }
+                }
+            } while ((choice == "1" || choice == "2") && !done) ;
+
+            return returnBlogID;
+        }
+
+        public static void addNewPost(BloggingContext db, int blogId)
+        {
+            // Create and save a new Post
+            string title = "";
+            string content = "";
+            Boolean done = false;
+            while (!done)
+            {
+                Console.Write("Enter a title for the new Post: ");
+                title = Console.ReadLine();
+                if (title.Length < 3)
+                {
+                    Console.WriteLine("Post title must be at least two characters.");
+                }
+                else
+                {
+                    done = true;
+                }
+            }
+
+            done = false;
+            while (!done)
+            {
+                Console.Write("Enter content for the new Post: ");
+                content = Console.ReadLine();
+                if (content.Length < 3)
+                {
+                    Console.WriteLine("Post content must be at least two characters.");
+                }
+                else
+                {
+                    done = true;
+                }
+
+            }
+
+            try
+            {
+                var post = new Post { Title = title, Content = content, BlogId = blogId };
+
+                db.AddPost(post);
+                logger.Info($"Post added - {title}");
+            }
+            catch (ExternalException ex)
+            {
+                logger.Error("Data exception adding new post: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
+
         }
 
     }
