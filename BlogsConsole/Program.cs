@@ -64,19 +64,20 @@ namespace BlogsConsole
             Console.WriteLine("All blogs in the database:");
             foreach (var item in query)
             {
-                Console.WriteLine(item.Name);
+                Console.WriteLine($"Blog #{item.BlogId}: {item.Name}");
             }
         }
 
-        public static void addNewBlog()
+        public static void addNewBlog(BloggingContext db)
         {
             // Create and save a new Blog
+            string name = "";
             Boolean done = false;
             while (!done)
             {
                 Console.Write("Enter a name for a new Blog: ");
-                var name = Console.ReadLine();
-                if (name.Length>2)
+                name = Console.ReadLine();
+                if (name.Length<3)
                 {
                     Console.WriteLine("Blog name must be at least two characters.");
                 }
