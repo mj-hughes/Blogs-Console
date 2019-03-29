@@ -25,7 +25,7 @@ namespace BlogsConsole
                     Console.WriteLine("1) Display all blogs");
                     Console.WriteLine("2) Add blog");
                     Console.WriteLine("3) Create post");
-                    Console.WriteLine("4) Display post");
+                    Console.WriteLine("4) Display posts");
                     Console.WriteLine("Enter q to quit");
                     // input response
                     choice = Console.ReadLine();
