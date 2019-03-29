@@ -87,9 +87,9 @@ namespace BlogsConsole
             {
                 Console.Write("Enter a name for a new Blog: ");
                 name = Console.ReadLine();
-                if (name.Length<3)
+                if (name.Length<1)
                 {
-                    Console.WriteLine("Blog name must be at least two characters.");
+                    logger.Error("Blog name cannot be null");
                 }
                 else
                 {
