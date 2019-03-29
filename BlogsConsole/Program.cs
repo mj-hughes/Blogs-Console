@@ -61,9 +61,10 @@ namespace BlogsConsole
         {
 
             // Display all Blogs from the database
+            var num = db.Blogs.Count();
             var query = db.Blogs.OrderBy(b => b.Name);
 
-            Console.WriteLine("All blogs in the database:");
+            logger.Info($"{num} blogs returned.");
             foreach (var item in query)
             {
                 Console.WriteLine($"Blog #{item.BlogId}: {item.Name}");
@@ -172,10 +173,10 @@ namespace BlogsConsole
                             {
                                 var num = db.Blogs.Where(b => b.BlogId.Equals(returnBlogID)).Count();
                                 if (num != 1)
-                                    Console.WriteLine("There are no blogs with this blog ID. Please try again.");
+                                    logger.Info("There are no blogs with this blog ID. Please try again.");
                                 else
                                 {
-                                    Console.WriteLine("There is one blog with this ID. Retrieving...");
+                                    logger.Info("There is one blog with this ID. Retrieving...");
                                     returnBlogID = blogId;
                                     done = true;
                                 }
@@ -213,7 +214,7 @@ namespace BlogsConsole
                 title = Console.ReadLine();
                 if (title.Length < 3)
                 {
-                    Console.WriteLine("Post title must be at least two characters.");
+                    logger.Info("Post title must be at least two characters.");
                 }
                 else
                 {
@@ -228,7 +229,7 @@ namespace BlogsConsole
                 content = Console.ReadLine();
                 if (content.Length < 3)
                 {
-                    Console.WriteLine("Post content must be at least two characters.");
+                    logger.Info("Post content must be at least two characters.");
                 }
                 else
                 {
