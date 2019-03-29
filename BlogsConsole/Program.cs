@@ -322,25 +322,29 @@ namespace BlogsConsole
             
             if (blogId == 0)
             {
+
                 // Display all posts from all blogs in the database
                 var num = db.Posts.Count();
-                var query = db.Posts.OrderBy(p => p.BlogId);
-
                 Console.WriteLine($"{num} post(s) returned");
+
+                var query = db.Posts.Include("Blog").OrderBy(p => p.Blog.Name);
                 foreach (var item in query)
                 {
-                    Console.Write($"Blog: {item.BlogId}\nTitle: {item.Title}\nContent: {item.Content}\n\n");
+                    Console.Write($"Blog: {item.Blog.Name}\nTitle: {item.Title}\nContent: {item.Content}\n\n");
                 }
 
             }
             else
             {
                 // Blog id selected. Display all posts from one blog.
+                Console.WriteLine("");
                 var num = db.Posts.Where(p => p.BlogId.Equals(blogId)).Count();
+                Console.WriteLine($"{num} post(s) returned");
                 IEnumerable<Post> postList = db.Posts.Where(p => p.BlogId.Equals(blogId));
+                
                 foreach (Post p in postList)
                 {
-                    Console.Write($"Blog: {p.BlogId}\nTitle: {p.Title}\nContent: {p.Content}\n\n");
+                    Console.Write($"Blog: { p.Blog.Name }\nTitle: {p.Title}\nContent: {p.Content}\n\n");
                 }
             }
         }
