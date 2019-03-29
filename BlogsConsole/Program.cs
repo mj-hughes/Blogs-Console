@@ -133,12 +133,12 @@ namespace BlogsConsole
 
                             var num = db.Blogs.Where(b => b.Name.ToUpper().Contains(blogTitle)).Count();
                             if (num > 1)
-                                Console.WriteLine("There are more than one blogs with this title. Please enter more characters.");
+                                logger.Info($"There are {num} blogs with this title. Please enter more characters.");
                             else if (num == 0)
-                                Console.WriteLine("There are no blogs with this title. Please try again.");
+                                logger.Info("There are no blogs with this title. Please try again.");
                             else if (num == 1)
                             {
-                                Console.WriteLine("There is one blog with this title. Retrieving...");
+                                logger.Info("There is one blog with this title. Retrieving...");
                                 IEnumerable<Blog> blogList = db.Blogs.Where(b => b.Name.ToUpper().Contains(blogTitle));
                                 foreach (Blog b in blogList)
                                 {
