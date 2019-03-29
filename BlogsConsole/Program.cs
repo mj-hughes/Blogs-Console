@@ -20,12 +20,12 @@ namespace BlogsConsole
                 string choice = "";
                 do
                 {
-                    Console.WriteLine("");
-                    Console.WriteLine("1) Display all blogs.");
-                    Console.WriteLine("2) Add a new blog.");
-                    Console.WriteLine("3) Create a post.");
-                    Console.WriteLine("4) Display posts.");
-                    Console.WriteLine("Press any other key to exit.");
+                    Console.WriteLine("Enter your selection:");
+                    Console.WriteLine("1) Display all blogs");
+                    Console.WriteLine("2) Add blog");
+                    Console.WriteLine("3) Create post");
+                    Console.WriteLine("4) Display post");
+                    Console.WriteLine("Enter q to quit");
                     // input response
                     choice = Console.ReadLine();
                     if (choice == "1")
@@ -39,11 +39,15 @@ namespace BlogsConsole
                     if (choice == "3")
                     {
                         int blogId=selectBlog(db);
-                        Console.WriteLine($"Adding to blog ID {blogId}.\n");
+                        logger.Info($"Adding to blog ID {blogId}.\n");
                         addNewPost(db, blogId);
                     }
+                    if (choice == "4")
+                    {
 
-                } while (choice == "1" || choice == "2" || choice == "3");
+                    }
+
+                } while (choice == "1" || choice == "2" || choice == "3" || choice =="4");
 
             }
             catch(ExternalException ex)
