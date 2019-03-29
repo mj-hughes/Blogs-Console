@@ -46,7 +46,7 @@ namespace BlogsConsole
                     }
                     if (choice == "4")
                     {
-
+                        displayPosts(db);
                     }
 
                 } while (choice == "1" || choice == "2" || choice == "3" || choice =="4");
@@ -71,7 +71,7 @@ namespace BlogsConsole
             var num = db.Blogs.Count();
             var query = db.Blogs.OrderBy(b => b.Name);
 
-            Console.WriteLine($"{num} blogs returned");
+            Console.WriteLine($"{num} blog(s) returned");
             foreach (var item in query)
             {
                 Console.WriteLine($"{item.Name}");
@@ -295,6 +295,56 @@ namespace BlogsConsole
             }
 
         }
+
+        public static void displayPosts(BloggingContext db)
+        {
+            
+            string choice = "";
+            Console.WriteLine("Select the blog's posts to display: ");
+            Console.WriteLine("1) Posts from all blogs");
+            Console.WriteLine("2) Pick blog");
+            // input response
+            choice = Console.ReadLine();
+            if (choice == "1")
+            {
+                displayAllPosts(db, 0);
+            }
+            else if (choice == "2")
+            {
+                int blogId = selectBlog(db);
+                displayAllPosts(db, blogId);
+            }
+
+        }
+
+        public static void displayAllPosts(BloggingContext db, int blogId)
+        {
+            
+            if (blogId == 0)
+            {
+                // Display all posts from all blogs in the database
+                var num = db.Posts.Count();
+                var query = db.Posts.OrderBy(p => p.BlogId);
+
+                Console.WriteLine($"{num} post(s) returned");
+                foreach (var item in query)
+                {
+                    Console.Write($"Blog: {item.BlogId}\nTitle: {item.Title}\nContent: {item.Content}\n\n");
+                }
+
+            }
+            else
+            {
+                // Blog id selected. Display all posts from one blog.
+                var num = db.Posts.Where(p => p.BlogId.Equals(blogId)).Count();
+                IEnumerable<Post> postList = db.Posts.Where(p => p.BlogId.Equals(blogId));
+                foreach (Post p in postList)
+                {
+                    Console.Write($"Blog: {p.BlogId}\nTitle: {p.Title}\nContent: {p.Content}\n\n");
+                }
+            }
+        }
+
 
     }
 }
