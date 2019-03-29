@@ -126,7 +126,7 @@ namespace BlogsConsole
                 done = false;
                 Console.WriteLine("");
                 Console.WriteLine("1) Pick blog by title.");
-                Console.WriteLine("2) Pick blog by ID.");
+                Console.WriteLine("2) Pick blog by ID.");              
                 // input response
                 choice = Console.ReadLine();
                 if (choice == "1")
@@ -200,7 +200,7 @@ namespace BlogsConsole
                         }
                         else
                         {
-                            logger.Error("Blog ID is not an integer value. Please try again.");
+                            logger.Error("Invalid Blog Id. Please try again.");
                         }
                     }
                 }
@@ -217,11 +217,11 @@ namespace BlogsConsole
             Boolean done = false;
             while (!done)
             {
-                Console.Write("Enter a title for the new Post: ");
+                Console.WriteLine("Enter the Post title: ");
                 title = Console.ReadLine();
-                if (title.Length < 3)
+                if (title.Length < 1)
                 {
-                    logger.Info("Post title must be at least two characters.");
+                    logger.Info("Post title cannot be null");
                 }
                 else
                 {
@@ -229,21 +229,9 @@ namespace BlogsConsole
                 }
             }
 
-            done = false;
-            while (!done)
-            {
-                Console.Write("Enter content for the new Post: ");
-                content = Console.ReadLine();
-                if (content.Length < 3)
-                {
-                    logger.Info("Post content must be at least two characters.");
-                }
-                else
-                {
-                    done = true;
-                }
-
-            }
+            // Post content can be null
+            Console.WriteLine("Enter the Post content: ");
+            content = Console.ReadLine();
 
             try
             {
