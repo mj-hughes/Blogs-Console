@@ -20,6 +20,7 @@ namespace BlogsConsole
                 string choice = "";
                 do
                 {
+                    Console.WriteLine(" ");
                     Console.WriteLine("Enter your selection:");
                     Console.WriteLine("1) Display all blogs");
                     Console.WriteLine("2) Add blog");
@@ -28,6 +29,7 @@ namespace BlogsConsole
                     Console.WriteLine("Enter q to quit");
                     // input response
                     choice = Console.ReadLine();
+                    logger.Info("Option \"" + choice + "\" selected");
                     if (choice == "1")
                     {
                         displayAllBlogs(db);
@@ -69,7 +71,7 @@ namespace BlogsConsole
             var num = db.Blogs.Count();
             var query = db.Blogs.OrderBy(b => b.Name);
 
-            logger.Info($"{num} blogs returned.");
+            Console.WriteLine($"{num} blogs returned");
             foreach (var item in query)
             {
                 Console.WriteLine($"Blog #{item.BlogId}: {item.Name}");
