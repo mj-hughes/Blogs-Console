@@ -125,8 +125,9 @@ namespace BlogsConsole
             {
                 done = false;
                 Console.WriteLine("");
-                Console.WriteLine("1) Pick blog by title.");
-                Console.WriteLine("2) Pick blog by ID.");              
+                Console.WriteLine("1) Pick blog by title");
+                Console.WriteLine("2) Pick blog by ID");
+                Console.WriteLine("3) Pick blog ID from a list of blogs");
                 // input response
                 choice = Console.ReadLine();
                 if (choice == "1")
@@ -204,7 +205,51 @@ namespace BlogsConsole
                         }
                     }
                 }
-            } while ((choice == "1" || choice == "2") && !done) ;
+                if (choice == "3")
+                {
+                    var query = db.Blogs.OrderBy(b => b.Name);
+                    Console.WriteLine("");
+                    Console.WriteLine("Select the blog you would like to post to:");
+                    foreach (var item in query)
+                    {
+                        Console.WriteLine($"{item.Name}: Blog Id #{item.BlogId}");
+                    }
+                    while (!done)
+                    {
+                        Console.Write("Enter blog ID: ");
+                        if (int.TryParse(Console.ReadLine(), out int blogId))
+                        {
+                            returnBlogID = blogId;
+                            try
+                            {
+                                var num = db.Blogs.Where(b => b.BlogId.Equals(returnBlogID)).Count();
+                                if (num != 1)
+                                    logger.Info("There are no blogs with this blog ID. Please try again.");
+                                else
+                                {
+                                    logger.Info("There is one blog with this ID. Retrieving...");
+                                    returnBlogID = blogId;
+                                    done = true;
+                                }
+                            }
+                            catch (ExternalException ex)
+                            {
+                                logger.Error("Data exception selecting blog by ID: " + ex.Message);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.Error(ex.Message);
+                            }
+
+                        }
+                        else
+                        {
+                            logger.Error("Invalid Blog Id. Please try again.");
+                        }
+                    }
+                }
+
+            } while ((choice == "1" || choice == "2" || choice == "3") && !done) ;
 
             return returnBlogID;
         }
@@ -238,7 +283,7 @@ namespace BlogsConsole
                 var post = new Post { Title = title, Content = content, BlogId = blogId };
 
                 db.AddPost(post);
-                logger.Info($"Post added - {title}");
+                logger.Info($"Post added - \"{title}\"");
             }
             catch (ExternalException ex)
             {
