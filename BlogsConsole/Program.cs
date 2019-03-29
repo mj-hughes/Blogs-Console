@@ -74,7 +74,7 @@ namespace BlogsConsole
             Console.WriteLine($"{num} blogs returned");
             foreach (var item in query)
             {
-                Console.WriteLine($"Blog #{item.BlogId}: {item.Name}");
+                Console.WriteLine($"{item.Name}");
             }
         }
 
